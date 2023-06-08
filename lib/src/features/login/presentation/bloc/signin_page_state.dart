@@ -1,29 +1,5 @@
 part of 'signin_page_bloc.dart';
 
-// abstract class SigninPageState extends Equatable {
-//   const SigninPageState();
-// }
-//
-// class SigninPageInitial extends SigninPageState {
-//   @override
-//   List<Object> get props => [];
-// }
-//
-// class LoadingState extends SigninPageState {
-//   @override
-//   List<Object> get props => [];
-// }
-//
-// class SuccessState extends SigninPageState {
-//   @override
-//   List<Object> get props => [];
-// }
-//
-// class ErrorState extends SigninPageState {
-//   @override
-//   List<Object> get props => [];
-// }
-
 enum SigninPageStatus { initial, success, failure, loading }
 
 class SigninPageState extends Equatable {

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:splash/src/core/widgets/colors.dart';
 import 'package:splash/src/core/widgets/customized_text_field.dart';
+import 'package:splash/src/core/widgets/logo.dart';
 import 'package:splash/src/core/widgets/text_style.dart';
 import 'package:splash/src/features/login/presentation/bloc/signin_page_bloc.dart';
 import 'package:splash/src/features/login/presentation/widgets/sign_up_direction.dart';
 import 'package:splash/src/features/signup/presentation/pages/signup.dart';
-import 'package:splash/src/features/splash/widgets/logo.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({Key? key}) : super(key: key);
@@ -43,7 +42,7 @@ class _SigninPageState extends State<SigninPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Logo(),
+                    const LoginpageLogo(LoginpageLogoSize: 36),
                     const SizedBox(height: 40),
                     CustomTextField(
                       controller: _emailController,

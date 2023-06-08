@@ -1,15 +1,20 @@
+// ignore_for_file: deprecated_member_use, library_private_types_in_public_api
+
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:splash/src/core/widgets/colors.dart';
+import 'package:splash/src/core/widgets/customized_text_field.dart';
+import 'package:splash/src/features/login/presentation/pages/signin_page.dart';
 import 'package:splash/src/features/signup/presentation/bloc/signup_bloc.dart';
 import 'package:splash/src/features/signup/presentation/bloc/signup_event.dart';
 import 'package:splash/src/features/signup/presentation/widgets/sign_up_elevated_button_widgets.dart';
 
 class SignUp extends StatefulWidget {
-  SignUp({Key? key}) : super(key: key);
+  const SignUp({Key? key}) : super(key: key);
 
   @override
   _SignUpState createState() => _SignUpState();
@@ -51,30 +56,60 @@ class _SignUpState extends State<SignUp> {
                   const SizedBox(height: 16.0),
                   _buildImage(context),
                   const SizedBox(height: 60.0),
-                  _buildName(),
+                  CustomTextField(
+                    controller: _name,
+                    hintText: 'Enter your name',
+                    keyboardType: TextInputType.name,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your email';
+                      }
+                      return null;
+                    },
+                  ),
                   const SizedBox(height: 16.0),
-                  _buildEmail(),
+                  CustomTextField(
+                    controller: _email,
+                    hintText: 'Enter your email',
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your email';
+                      }
+                      return null;
+                    },
+                  ),
                   const SizedBox(height: 16.0),
-                  _buildPassword(),
+                  CustomTextField(
+                    controller: _password,
+                    hintText: 'Enter your password',
+                    keyboardType: TextInputType.visiblePassword,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter your password';
+                      }
+                      return null;
+                    },
+                  ),
                   const SizedBox(height: 16.0),
                   // _buildButton(context),
                   CustomizedButton(
-                      buttonTitle: "Submit",
-                      foregroundColor: Palette.primaryColor,
-                      backgroundColor: Palette.secondaryColor,
-                      buttonFunction: () {
-                        if (_formKey.currentState?.validate() != false) {
-                          BlocProvider.of<SignUpBloc>(context).add(
-                            SignUpSubmitted(
-                              _name.text,
-                              _email.text,
-                              _password.text,
-                              _image!,
-                            ),
-                          );
-                        }
-                      },
-                      ),
+                    buttonTitle: "Submit",
+                    foregroundColor: Palette.primaryColor,
+                    backgroundColor: Palette.secondaryColor,
+                    buttonFunction: () {
+                      if (_formKey.currentState?.validate() != false) {
+                        BlocProvider.of<SignUpBloc>(context).add(
+                          SignUpSubmitted(
+                            _name.text,
+                            _email.text,
+                            _password.text,
+                            _image!,
+                          ),
+                        );
+                      }
+                    },
+                  ),
                   const SizedBox(height: 16.0),
                   _buildAlreadyHaveAnAccount(),
                 ],
@@ -87,104 +122,31 @@ class _SignUpState extends State<SignUp> {
   }
 
   Widget _buildAlreadyHaveAnAccount() {
-    return const Row(
+    return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Already have an account? ',
-            style: TextStyle(color: Palette.whiteColor)),
-        Text(
-          'LogIn',
-          style: TextStyle(
-            color: Palette.whiteColor,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
+        const Text(
+          'Already have an account? ',
+          style: TextStyle(color: Palette.whiteColor),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SigninPage()),
+            );
+          },
+          child: const Text(
+            'LogIn',
+            style: TextStyle(
+              color: Palette.whiteColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildButton(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        if (_formKey.currentState?.validate() != false) {
-          BlocProvider.of<SignUpBloc>(context).add(
-            SignUpSubmitted(
-              _name.text,
-              _email.text,
-              _password.text,
-              _image!,
-            ),
-          );
-        }
-      },
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-      ),
-      child: const Text('Submit'),
-    );
-  }
-
-  Widget _buildPassword() {
-    return TextFormField(
-      controller: _password,
-      style: const TextStyle(color: Palette.blackColor),
-      decoration: const InputDecoration(
-          hintText: "Password",
-          border: OutlineInputBorder(),
-          filled: true,
-          fillColor: Palette.whiteColor,
-          // hintStyle: TextStyle(color: Palette.blackColor),
-          errorStyle: TextStyle(color: Palette.whiteColor)),
-      validator: (String? value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter your password';
-        }
-        return null;
-      },
-    );
-  }
-
-  Widget _buildEmail() {
-    return TextFormField(
-      controller: _email,
-      style: const TextStyle(color: Palette.blackColor),
-      decoration: const InputDecoration(
-          hintText: "Email",
-          border: OutlineInputBorder(),
-          filled: true,
-          fillColor: Palette.whiteColor,
-          // hintStyle: TextStyle(color: Palette.blackColor),
-          errorStyle: TextStyle(color: Palette.whiteColor)),
-      validator: (String? value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter your email';
-        }
-        return null;
-      },
-    );
-  }
-
-  Widget _buildName() {
-    return TextFormField(
-      controller: _name,
-      style: const TextStyle(color: Palette.blackColor),
-      decoration: const InputDecoration(
-          hintText: "Name",
-          border: OutlineInputBorder(),
-          filled: true,
-          fillColor: Palette.whiteColor,
-          // hintStyle: TextStyle(color: Palette.blackColor),
-          errorStyle: TextStyle(color: Palette.whiteColor)),
-      validator: (String? value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter your name';
-        }
-        return null;
-      },
     );
   }
 
