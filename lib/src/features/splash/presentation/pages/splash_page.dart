@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splash/src/core/widgets/colors.dart';
 import 'package:splash/src/features/login/presentation/pages/login_page.dart';
 import 'package:splash/src/features/splash/data/models/splash_model.dart';
+import 'package:splash/src/features/splash/widgets/customized_button.dart';
 import 'package:splash/src/features/splash/widgets/logo.dart';
 
 class SplashPage extends StatefulWidget {
@@ -28,7 +29,6 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> _setSplashPageStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
     await prefs.setBool('showSplash', false);
   }
 
@@ -82,11 +82,14 @@ class _SplashPageState extends State<SplashPage> {
                       ),
                       const SizedBox(height: 16),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: SizedBox(
                           width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
+                          child: CustomButton(
+                            foregroundColor: Palette.primaryColor,
+                            backgroundColor: Palette.secondaryColor,
+                            buttonTitle: "Continue",
+                            buttonFunction: () {
                               _setSplashPageStatus();
                               Navigator.push(
                                 context,
@@ -95,20 +98,6 @@ class _SplashPageState extends State<SplashPage> {
                                 ),
                               );
                             },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Palette.whiteColor,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                "Continue",
-                                style: TextStyle(color: Palette.primaryColor),
-                              ),
-                            ),
                           ),
                         ),
                       ),
