@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-class CustomButton extends StatelessWidget {
+class CustomizedButton extends StatelessWidget {
   final String buttonTitle;
   final VoidCallback buttonFunction;
   final double borderRadius;
   final Color? foregroundColor;
   final Color? backgroundColor;
+  final double? elevation;
   final double fontSize;
-  final double elevation;
 
-  const CustomButton({
-    super.key,
+  CustomizedButton({
     required this.buttonTitle,
     required this.buttonFunction,
     this.borderRadius = 8,
