@@ -1,15 +1,23 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:splash/src/features/signup/presentation/bloc/signup_event.dart';
+import 'package:splash/src/features/signup/presentation/bloc/signup_state.dart';
 
-part 'signup_event.dart';
-part 'signup_state.dart';
+class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
+  SignUpBloc() : super(SignUpState()) {
+    on<SignUpSubmitted>(_onSignUpSubmitted);
+  }
 
-class SignupBloc extends Bloc<SignupEvent, SignupState> {
-  SignupBloc() : super(SignupInitial()) {
-    on<SignupEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+  FutureOr<void> _onSignUpSubmitted(
+      SignUpSubmitted event, Emitter<SignUpState> emit) {
+    emit(state.copyWith(
+      name: event.name,
+      email: event.email,
+      password: event.password,
+      image: event.image,
+    ));
+
+    return null;
   }
 }
