@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splash/src/core/widgets/colors.dart';
-import 'package:splash/src/features/login/presentation/pages/login_page.dart';
+import 'package:splash/src/features/login/presentation/pages/signin_page.dart';
 import 'package:splash/src/features/splash/data/models/splash_model.dart';
 import 'package:splash/src/features/splash/widgets/logo.dart';
 
@@ -91,7 +91,7 @@ class _SplashPageState extends State<SplashPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const LoginPage(),
+                                  builder: (context) => SigninPage(),
                                 ),
                               );
                             },
@@ -191,7 +191,7 @@ class _SplashPageState extends State<SplashPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const LoginPage(),
+                  builder: (context) => const SigninPage(),
                 ),
               );
             },

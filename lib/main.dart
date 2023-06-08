@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splash/src/features/login/presentation/pages/login_page.dart';
 import 'package:splash/src/features/signup/presentation/pages/signup.dart';
 import 'package:splash/src/features/splash/presentation/pages/splash_page.dart';
 
@@ -24,7 +23,7 @@ class MyApp extends StatelessWidget {
       // theme: ThemeData(
       //   primarySwatch: Colors.blue,
       // ),
-     home: showSplash ? const SplashPage() :  SignUp(),
+      home: showSplash ? const SplashPage() : SignUp(),
     );
   }
 }
