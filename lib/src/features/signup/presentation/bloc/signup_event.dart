@@ -1,6 +1,11 @@
+import 'package:equatable/equatable.dart';
 import 'package:image_picker/image_picker.dart';
 
-class SignUpEvent {}
+class SignUpEvent extends Equatable {
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
 
 class SignUpSubmitted extends SignUpEvent {
   final String name;
@@ -14,4 +19,6 @@ class SignUpSubmitted extends SignUpEvent {
     this.password,
     this.image,
   );
+  @override
+  List<Object?> get props => [name, email, password, image];
 }

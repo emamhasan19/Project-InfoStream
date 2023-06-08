@@ -8,10 +8,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:splash/src/core/widgets/colors.dart';
 import 'package:splash/src/core/widgets/customized_text_field.dart';
+import 'package:splash/src/core/widgets/text_style.dart';
 import 'package:splash/src/features/login/presentation/pages/signin_page.dart';
 import 'package:splash/src/features/signup/presentation/bloc/signup_bloc.dart';
 import 'package:splash/src/features/signup/presentation/bloc/signup_event.dart';
-import 'package:splash/src/features/signup/presentation/widgets/sign_up_elevated_button_widgets.dart';
+import 'package:splash/src/features/signup/presentation/bloc/signup_state.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -93,23 +94,24 @@ class _SignUpState extends State<SignUp> {
                   ),
                   const SizedBox(height: 16.0),
                   // _buildButton(context),
-                  CustomizedButton(
-                    buttonTitle: "Submit",
-                    foregroundColor: Palette.primaryColor,
-                    backgroundColor: Palette.secondaryColor,
-                    buttonFunction: () {
-                      if (_formKey.currentState?.validate() != false) {
-                        BlocProvider.of<SignUpBloc>(context).add(
-                          SignUpSubmitted(
-                            _name.text,
-                            _email.text,
-                            _password.text,
-                            _image!,
-                          ),
-                        );
-                      }
-                    },
-                  ),
+                  // CustomizedButton(
+                  //   buttonTitle: "Submit",
+                  //   foregroundColor: Palette.primaryColor,
+                  //   backgroundColor: Palette.secondaryColor,
+                  //   buttonFunction: () {
+                  //     if (_formKey.currentState?.validate() != false) {
+                  //       BlocProvider.of<SignUpBloc>(context).add(
+                  //         SignUpSubmitted(
+                  //           _name.text,
+                  //           _email.text,
+                  //           _password.text,
+                  //           _image!,
+                  //         ),
+                  //       );
+                  //     }
+                  //   },
+                  // ),
+                  _buildSignUpButton(context),
                   const SizedBox(height: 16.0),
                   _buildAlreadyHaveAnAccount(),
                 ],
@@ -189,6 +191,59 @@ class _SignUpState extends State<SignUp> {
           ),
         )
       ],
+    );
+  }
+
+  Widget _buildSignUpButton(BuildContext context) {
+    return BlocConsumer<SignUpBloc, SignUpState>(
+      listener: (context, state) {
+        if (state.status == SignUpStatus.success) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SigninPage(),
+            ),
+          );
+        } else if (state.status == SignUpStatus.failure) {
+          //  Fluttertoast.showToast(msg: "users login failed");
+        }
+      },
+      builder: (context, state) {
+        if (state.status == SignUpStatus.loading) {
+          return const CircularProgressIndicator(
+            color: Palette.whiteColor,
+          );
+        }
+        return SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Palette.primaryColor,
+              backgroundColor: Palette.whiteColor,
+            ),
+            onPressed: () {
+              if (_formKey.currentState?.validate() != false) {
+                BlocProvider.of<SignUpBloc>(context).add(
+                  SignUpSubmitted(
+                    _name.text,
+                    _email.text,
+                    _password.text,
+                    _image!,
+                  ),
+                );
+              }
+            },
+            child: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 12),
+              child: PlainTextStyle(
+                text: 'Submit',
+                size: 20,
+                color: Palette.primaryColor,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
