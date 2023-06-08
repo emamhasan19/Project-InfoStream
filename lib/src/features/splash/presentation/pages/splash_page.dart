@@ -48,8 +48,8 @@ class _SplashPageState extends State<SplashPage> {
               },
               itemBuilder: (context, index) {
                 return Container(
-                  width: double.infinity,
-                  height: double.infinity,
+                  // width: double.infinity,
+                  // height: double.infinity,
                   color: Palette.primaryColor,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -123,53 +123,48 @@ class _SplashPageState extends State<SplashPage> {
               right: 0,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: buildSlider(context),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Logo(),
+                    Visibility(
+                      visible: _currentPageIndex < splashes.length - 1,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _setSplashPageStatus();
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LoginPage(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Palette.whiteColor,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            "Skip",
+                            style: TextStyle(color: Palette.primaryColor),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             Positioned(
               bottom: 64,
               left: 0,
               right: 0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () {
-                      if (_currentPageIndex > 0) {
-                        _pageController.previousPage(
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.ease,
-                        );
-                      }
-                    },
-                    color: _currentPageIndex > 0
-                        ? Palette.whiteColor
-                        : Palette.whiteColor.withOpacity(.2),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: _buildPageIndicator(),
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.arrow_forward),
-                    onPressed: () {
-                      if (_currentPageIndex < splashes.length - 1) {
-                        _pageController.nextPage(
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.ease,
-                        );
-                      }
-                    },
-                    color: _currentPageIndex < splashes.length - 1
-                        ? Palette.whiteColor
-                        : Palette.whiteColor.withOpacity(.2),
-                  ),
-                ],
-              ),
+              child: buildSlider(),
             ),
           ],
         ),
@@ -177,39 +172,44 @@ class _SplashPageState extends State<SplashPage> {
     );
   }
 
-  Widget buildSlider(BuildContext context) {
+  Widget buildSlider() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Logo(),
-        Visibility(
-          visible: _currentPageIndex < splashes.length - 1,
-          child: ElevatedButton(
-            onPressed: () {
-              _setSplashPageStatus();
-
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const LoginPage(),
-                ),
+        IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            if (_currentPageIndex > 0) {
+              _pageController.previousPage(
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.ease,
               );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Palette.whiteColor,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                "Skip",
-                style: TextStyle(color: Palette.primaryColor),
-              ),
-            ),
+            }
+          },
+          color: _currentPageIndex > 0
+              ? Palette.whiteColor
+              : Palette.whiteColor.withOpacity(.2),
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: _buildPageIndicator(),
           ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.arrow_forward),
+          onPressed: () {
+            if (_currentPageIndex < splashes.length - 1) {
+              _pageController.nextPage(
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.ease,
+              );
+            }
+          },
+          color: _currentPageIndex < splashes.length - 1
+              ? Palette.whiteColor
+              : Palette.whiteColor.withOpacity(.2),
         ),
       ],
     );
@@ -217,7 +217,6 @@ class _SplashPageState extends State<SplashPage> {
 
   List<Widget> _buildPageIndicator() {
     List<Widget> indicators = [];
-
     for (int i = 0; i < splashes.length; i++) {
       indicators.add(
         Padding(
