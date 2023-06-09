@@ -25,7 +25,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    // _setSplashPageStatus();
+    _setSplashPageStatus();
   }
 
   Future<void> _setSplashPageStatus() async {
