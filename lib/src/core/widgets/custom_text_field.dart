@@ -4,6 +4,7 @@ import 'package:splash/src/core/widgets/colors.dart';
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
+  final double borderRadius;
   final Color textColor;
   final Color hintColor;
   final Color borderColor;
@@ -15,6 +16,7 @@ class CustomTextField extends StatefulWidget {
     Key? key,
     required this.controller,
     required this.hintText,
+    this.borderRadius = 8,
     this.textColor = Colors.black,
     this.hintColor = Colors.grey,
     this.borderColor = Colors.grey,
@@ -36,14 +38,22 @@ class _CustomTextFieldState extends State<CustomTextField> {
       controller: widget.controller,
       decoration: InputDecoration(
         filled: true,
-        fillColor: Palette.whiteColor,
-        border: const OutlineInputBorder(),
+        fillColor: Palette.secondaryColor,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(widget.borderRadius),
+          // borderSide: const BorderSide(
+          //   color: Colors.red,
+          //   width: 3,
+          // ),
+        ),
         enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(widget.borderRadius),
           borderSide: BorderSide(
             color: widget.borderColor,
           ),
         ),
         focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(widget.borderRadius),
           borderSide: BorderSide(
             color: widget.borderColor,
           ),

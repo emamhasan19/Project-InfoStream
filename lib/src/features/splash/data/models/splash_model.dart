@@ -13,7 +13,7 @@ class SplashModel {
         SplashModel(
           title: 'Express Yourself Freely',
           description:
-              'Share your thoughts, ideas, and creativity with the world. Post updates, photos, and videos to express yourself and showcase your unique personality. Connect with others who appreciate your authentic self.',
+              'Share your thoughts and creativity with the world. Post updates, photos and videos to express yourself and showcase your unique personality. Connect with others who appreciate your authentic self.',
           image: 'assets/images/image1.svg',
         ),
         SplashModel(

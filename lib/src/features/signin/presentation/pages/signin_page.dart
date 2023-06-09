@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:splash/src/core/widgets/colors.dart';
-import 'package:splash/src/core/widgets/customized_text_field.dart';
+import 'package:splash/src/core/widgets/custom_button.dart';
+import 'package:splash/src/core/widgets/custom_snackbar.dart';
+import 'package:splash/src/core/widgets/custom_text_field.dart';
+import 'package:splash/src/core/widgets/custom_text_style.dart';
 import 'package:splash/src/core/widgets/logo.dart';
-import 'package:splash/src/core/widgets/text_style.dart';
-import 'package:splash/src/features/login/presentation/bloc/signin_page_bloc.dart';
-import 'package:splash/src/features/login/presentation/widgets/sign_up_direction.dart';
-import 'package:splash/src/features/signup/presentation/pages/signup.dart';
+import 'package:splash/src/features/signin/presentation/bloc/signin_bloc.dart';
+import 'package:splash/src/features/signup/presentation/pages/signup_page.dart';
 
-class SigninPage extends StatefulWidget {
-  const SigninPage({Key? key}) : super(key: key);
+class SignInPage extends StatefulWidget {
+  const SignInPage({Key? key}) : super(key: key);
 
   @override
-  State<SigninPage> createState() => _SigninPageState();
+  State<SignInPage> createState() => _SignInPageState();
 }
 
-class _SigninPageState extends State<SigninPage> {
+class _SignInPageState extends State<SignInPage> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -42,7 +43,7 @@ class _SigninPageState extends State<SigninPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const LoginpageLogo(LoginpageLogoSize: 36),
+                    const Logo(logoSize: 36),
                     const SizedBox(height: 40),
                     CustomTextField(
                       controller: _emailController,
@@ -55,11 +56,11 @@ class _SigninPageState extends State<SigninPage> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 16),
                     CustomTextField(
                       controller: _passwordController,
                       hintText: 'Enter your password',
-                      keyboardType: TextInputType.text,
+                      keyboardType: TextInputType.visiblePassword,
                       obscureText: true,
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -68,12 +69,12 @@ class _SigninPageState extends State<SigninPage> {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 16),
                     _buildRememberMeBox(),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 16),
                     _buildLoginButton(context),
-                    const SizedBox(height: 10),
-                    const SignupDirection(),
+                    const SizedBox(height: 16),
+                    _buildSignUpNavigation(context),
                   ],
                 ),
               ),
@@ -84,16 +85,43 @@ class _SigninPageState extends State<SigninPage> {
     );
   }
 
+  Widget _buildSignUpNavigation(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const CustomTextStyle(
+          text: "Don't have an account?",
+          color: Palette.secondaryColor,
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SignUpPage(),
+              ),
+            );
+          },
+          child: const CustomTextStyle(
+            text: "Sign up",
+            color: Palette.secondaryColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildRememberMeBox() {
     return Row(
       children: [
         Checkbox(
           value: _rememberMe,
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          activeColor: Palette.whiteColor,
+          activeColor: Palette.secondaryColor,
           checkColor: Palette.primaryColor,
           fillColor: MaterialStateProperty.all(
-            Palette.whiteColor,
+            Palette.secondaryColor,
           ),
           onChanged: (value) {
             setState(() {
@@ -102,60 +130,50 @@ class _SigninPageState extends State<SigninPage> {
           },
           //inactiveTrackColor: Colors.white,
         ),
-        const PlainTextStyle(
+        const CustomTextStyle(
           text: 'Remember me',
-          size: 16,
-          color: Palette.whiteColor,
+          color: Palette.secondaryColor,
         ),
       ],
     );
   }
 
   Widget _buildLoginButton(BuildContext context) {
-    return BlocConsumer<SigninPageBloc, SigninPageState>(
+    return BlocConsumer<SignInBloc, SignInState>(
       listener: (context, state) {
-        if (state.status == SigninPageStatus.success) {
+        if (state.status == SignInStatus.success) {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SignUp(),
+              builder: (context) => const SignUpPage(),
             ),
           );
-        } else if (state.status == SigninPageStatus.failure) {
-          //  Fluttertoast.showToast(msg: "users login failed");
+        } else if (state.status == SignInStatus.failure) {
+          CustomSnackBar(context, 'Failed to login');
         }
       },
       builder: (context, state) {
-        if (state.status == SigninPageStatus.loading) {
+        if (state.status == SignInStatus.loading) {
           return const CircularProgressIndicator(
-            color: Palette.whiteColor,
+            color: Palette.secondaryColor,
           );
         }
         return SizedBox(
           width: double.infinity,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Palette.primaryColor,
-              backgroundColor: Palette.whiteColor,
-            ),
-            onPressed: () {
+          child: CustomButton(
+            buttonTitle: "Login",
+            buttonFunction: () {
               if (formKey.currentState!.validate()) {
-                context.read<SigninPageBloc>().add(
-                      SigninPageSubmitEvent(
+                context.read<SignInBloc>().add(
+                      SignInSubmitEvent(
                         email: _emailController.text.trim(),
                         password: _passwordController.text,
                       ),
                     );
               }
             },
-            child: const Padding(
-              padding: EdgeInsets.symmetric(vertical: 12),
-              child: PlainTextStyle(
-                text: 'Login',
-                size: 20,
-                color: Palette.primaryColor,
-              ),
-            ),
+            textColor: Palette.primaryColor,
+            backgroundColor: Palette.secondaryColor,
           ),
         );
       },

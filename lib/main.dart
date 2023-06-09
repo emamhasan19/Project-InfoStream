@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splash/src/features/login/presentation/bloc/signin_page_bloc.dart';
+import 'package:splash/src/features/signin/presentation/bloc/signin_bloc.dart';
+import 'package:splash/src/features/signin/presentation/pages/signin_page.dart';
 import 'package:splash/src/features/signup/presentation/bloc/signup_bloc.dart';
-import 'package:splash/src/features/signup/presentation/pages/signup.dart';
 import 'package:splash/src/features/splash/presentation/pages/splash_page.dart';
 
 void main() async {
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => SigninPageBloc(),
+          create: (_) => SignInBloc(),
         ),
         BlocProvider(
           create: (_) => SignUpBloc(),
@@ -32,10 +32,8 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        // theme: ThemeData(
-        //   primarySwatch: Colors.blue,
-        // ),
-        home: showSplash ? const SplashPage() : SignUp(),
+        home: showSplash ? const SplashPage() : const SignInPage(),
+        // home: WelcomePage(),
       ),
     );
   }
