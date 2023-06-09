@@ -39,7 +39,7 @@ class _SplashPageState extends State<SplashPage> {
       child: Scaffold(
         backgroundColor: Palette.primaryColor,
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Stack(
             children: [
               PageView.builder(
