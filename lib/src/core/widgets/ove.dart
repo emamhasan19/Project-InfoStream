@@ -6,8 +6,8 @@ class Ove extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Palette.blackColor,
+    return const Scaffold(
+      backgroundColor: Palette.redColor,
     );
   }
 }
