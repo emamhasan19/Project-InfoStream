@@ -1,18 +1,25 @@
 part of 'signin_bloc.dart';
 
-abstract class SignInEvent extends Equatable {
+abstract class SignInEvent {
   const SignInEvent();
 }
 
-class SignInSubmitEvent extends SignInEvent {
-  const SignInSubmitEvent({
-    required this.email,
-    required this.password,
-  });
+class EmailChangeEvent extends SignInEvent {
+  const EmailChangeEvent({required this.email});
 
   final String email;
-  final String password;
-
-  @override
-  List<Object?> get props => [email, password];
 }
+
+class PasswordChangeEvent extends SignInEvent {
+  const PasswordChangeEvent({required this.password});
+
+  final String password;
+}
+
+class RememberMeEvent extends SignInEvent {
+  const RememberMeEvent({required this.isRememberMe});
+
+  final bool isRememberMe;
+}
+
+class SignInSubmitEvent extends SignInEvent {}

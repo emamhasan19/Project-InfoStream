@@ -1,17 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:splash/src/core/widgets/colors.dart';
+import 'package:info_stream/src/core/colors.dart';
 
 class CustomTextField extends StatefulWidget {
-  final TextEditingController controller;
-  final String hintText;
-  final double borderRadius;
-  final Color textColor;
-  final Color hintColor;
-  final Color borderColor;
-  final TextInputType? keyboardType;
-  final bool obscureText;
-  final FormFieldValidator<String>? validator;
-
   const CustomTextField({
     Key? key,
     required this.controller,
@@ -23,7 +13,19 @@ class CustomTextField extends StatefulWidget {
     this.keyboardType,
     this.obscureText = false,
     this.validator,
+    required this.onChanged,
   }) : super(key: key);
+
+  final TextEditingController controller;
+  final String hintText;
+  final double borderRadius;
+  final Color textColor;
+  final Color hintColor;
+  final Color borderColor;
+  final TextInputType? keyboardType;
+  final bool obscureText;
+  final FormFieldValidator<String>? validator;
+  final Function(String?) onChanged;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -36,9 +38,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
+      onChanged: widget.onChanged,
       decoration: InputDecoration(
         filled: true,
-        fillColor: Palette.secondaryColor,
+        fillColor: AppColors.secondaryColor,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(widget.borderRadius),
           // borderSide: const BorderSide(
@@ -71,18 +74,18 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 },
                 child: Icon(
                   _obscurePassword ? Icons.visibility : Icons.visibility_off,
-                  color: Palette.primaryColor,
+                  color: AppColors.primaryColor,
                 ),
               )
             : null,
-        errorStyle: const TextStyle(color: Palette.redColor),
+        errorStyle: const TextStyle(color: AppColors.redColor),
       ),
       style: TextStyle(
         color: widget.textColor,
       ),
       obscureText: widget.obscureText && _obscurePassword,
       validator: widget.validator,
-      cursorColor: Palette.blackColor,
+      cursorColor: AppColors.blackColor,
       keyboardType: widget.keyboardType,
     );
   }

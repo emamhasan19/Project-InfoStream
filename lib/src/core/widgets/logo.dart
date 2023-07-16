@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:splash/src/core/widgets/colors.dart';
+import 'package:info_stream/src/core/colors.dart';
 
 class Logo extends StatelessWidget {
   const Logo({super.key, required this.logoSize});
@@ -15,13 +15,13 @@ class Logo extends StatelessWidget {
       children: [
         SvgPicture.asset(
           'assets/images/logo.svg',
-          color: Palette.secondaryColor,
+          color: AppColors.secondaryColor,
           height: logoSize * 2,
         ),
         Text(
           "InfoStream",
           style: TextStyle(
-            color: Palette.secondaryColor,
+            color: AppColors.secondaryColor,
             fontWeight: FontWeight.bold,
             fontSize: logoSize,
           ),

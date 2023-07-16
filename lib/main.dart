@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:info_stream/src/core/bloc_providers/bloc_providers.dart';
+import 'package:info_stream/src/core/routes/route_generator.dart';
+import 'package:info_stream/src/core/routes/routes.dart';
+import 'package:info_stream/src/core/text_constants.dart';
+import 'package:info_stream/src/core/values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splash/src/features/signin/presentation/bloc/signin_bloc.dart';
-import 'package:splash/src/features/signin/presentation/pages/signin_page.dart';
-import 'package:splash/src/features/signup/presentation/bloc/signup_bloc.dart';
-import 'package:splash/src/features/splash/presentation/pages/splash_page.dart';
+
+import 'src/core/di/injection_container.dart' as di;
 
 void main() async {
+  await di.init();
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool showSplash = prefs.getBool('showSplash') ?? true;
@@ -16,25 +21,32 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final bool showSplash;
-
-  const MyApp({super.key, required this.showSplash});
+  const MyApp({
+    super.key,
+    required this.showSplash,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (_) => SignInBloc(),
-        ),
-        BlocProvider(
-          create: (_) => SignUpBloc(),
-        ),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: showSplash ? const SplashPage() : const SignInPage(),
-        // home: WelcomePage(),
-      ),
+    return ScreenUtilInit(
+      designSize: const Size(Values.defaultWidth, Values.defaultHeight),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (BuildContext context, Widget? child) {
+        return MultiBlocProvider(
+          providers: GlobalBlocProviders().providers,
+          child: MaterialApp(
+            title: TextConstants.appName,
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            onGenerateRoute: RouteGenerator.generateRoute,
+            // initialRoute: Routes.splash,
+            initialRoute: showSplash ? Routes.splash : Routes.signIn,
+          ),
+        );
+      },
     );
   }
 }

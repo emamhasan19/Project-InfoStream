@@ -1,13 +1,13 @@
 class SignUpEntity {
-  final String name;
-  final String email;
-  final String password;
-  final String image;
+  String name;
+  String email;
+  String password;
+  String avatar;
 
-  SignUpEntity(
-    this.name,
-    this.email,
-    this.password,
-    this.image,
-  );
+  SignUpEntity({
+    required this.name,
+    required this.email,
+    required this.password,
+    required this.avatar,
+  });
 }

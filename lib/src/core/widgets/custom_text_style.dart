@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:splash/src/core/widgets/colors.dart';
+import 'package:info_stream/src/core/colors.dart';
 
 class CustomTextStyle extends StatelessWidget {
   const CustomTextStyle({
     Key? key,
     required this.text,
     this.size = 16,
-    this.color = Palette.blackColor,
+    this.color = AppColors.blackColor,
     this.textAlign = TextAlign.left,
     this.fontWeight = FontWeight.normal,
   }) : super(key: key);

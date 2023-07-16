@@ -1,20 +1,15 @@
 // ignore_for_file: deprecated_member_use, library_private_types_in_public_api
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:splash/src/core/widgets/colors.dart';
-import 'package:splash/src/core/widgets/custom_button.dart';
-import 'package:splash/src/core/widgets/custom_snackbar.dart';
-import 'package:splash/src/core/widgets/custom_text_field.dart';
-import 'package:splash/src/core/widgets/custom_text_style.dart';
-import 'package:splash/src/core/widgets/logo.dart';
-import 'package:splash/src/features/signin/presentation/pages/signin_page.dart';
-import 'package:splash/src/features/signup/presentation/bloc/signup_bloc.dart';
-import 'package:splash/src/features/signup/presentation/bloc/signup_event.dart';
-import 'package:splash/src/features/signup/presentation/bloc/signup_state.dart';
+import 'package:info_stream/src/core/colors.dart';
+import 'package:info_stream/src/core/routes/routes.dart';
+import 'package:info_stream/src/core/widgets/custom_button.dart';
+import 'package:info_stream/src/core/widgets/custom_snackbar.dart';
+import 'package:info_stream/src/core/widgets/custom_text_field.dart';
+import 'package:info_stream/src/core/widgets/custom_text_style.dart';
+import 'package:info_stream/src/core/widgets/logo.dart';
+import 'package:info_stream/src/features/signup/presentation/bloc/signup_bloc.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -25,26 +20,23 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _name = TextEditingController();
-  final TextEditingController _email = TextEditingController();
-  final TextEditingController _password = TextEditingController();
-  XFile? _image;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  Future<void> _pickImage(BuildContext context) async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _image = pickedFile;
-      });
-    }
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Palette.primaryColor,
+        backgroundColor: AppColors.primaryColor,
         body: Center(
           child: SingleChildScrollView(
             child: Form(
@@ -58,44 +50,12 @@ class _SignUpState extends State<SignUpPage> {
                   children: [
                     const Logo(logoSize: 36),
                     const SizedBox(height: 40.0),
-                    _buildImage(context),
                     const SizedBox(height: 32.0),
-                    CustomTextField(
-                      controller: _name,
-                      hintText: 'Enter your name',
-                      keyboardType: TextInputType.name,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your email';
-                        }
-                        return null;
-                      },
-                    ),
+                    _buildNameField(),
                     const SizedBox(height: 16.0),
-                    CustomTextField(
-                      controller: _email,
-                      hintText: 'Enter your email',
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your email';
-                        }
-                        return null;
-                      },
-                    ),
+                    _buildEmailField(),
                     const SizedBox(height: 16.0),
-                    CustomTextField(
-                      controller: _password,
-                      hintText: 'Enter your password',
-                      keyboardType: TextInputType.text,
-                      obscureText: true,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your password';
-                        }
-                        return null;
-                      },
-                    ),
+                    _buildPasswordField(),
                     const SizedBox(height: 16.0),
                     _buildSignUpButton(context),
                     const SizedBox(height: 16.0),
@@ -110,26 +70,75 @@ class _SignUpState extends State<SignUpPage> {
     );
   }
 
+  Widget _buildNameField() {
+    return BlocBuilder<SignUpBloc, SignUpState>(
+      builder: (context, state) {
+        return CustomTextField(
+          controller: _nameController,
+          onChanged: (value) =>
+              context.read<SignUpBloc>().add(NameChangeEvent(name: value!)),
+          hintText: 'Enter your name',
+          keyboardType: TextInputType.name,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Please enter your name';
+            }
+            return null;
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildEmailField() {
+    return CustomTextField(
+      controller: _emailController,
+      onChanged: (value) =>
+          context.read<SignUpBloc>().add(EmailChangeEvent(email: value!)),
+      hintText: 'Enter your email',
+      keyboardType: TextInputType.emailAddress,
+      validator: (value) {
+        // print(value);
+        if (value!.isEmpty) {
+          return 'Please enter your email';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return CustomTextField(
+      controller: _passwordController,
+      onChanged: (value) =>
+          context.read<SignUpBloc>().add(PasswordChangeEvent(password: value!)),
+      hintText: 'Enter your password',
+      keyboardType: TextInputType.text,
+      obscureText: true,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please enter your password';
+        }
+        return null;
+      },
+    );
+  }
+
   Widget _buildLoginNavigation() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const CustomTextStyle(
           text: "Don't have an account?",
-          color: Palette.secondaryColor,
+          color: AppColors.secondaryColor,
         ),
         TextButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const SignInPage(),
-              ),
-            );
+            Navigator.pushNamed(context, Routes.signIn);
           },
           child: const CustomTextStyle(
-            text: "Login",
-            color: Palette.secondaryColor,
+            text: "Sign In",
+            color: AppColors.secondaryColor,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -137,44 +146,19 @@ class _SignUpState extends State<SignUpPage> {
     );
   }
 
-  Widget _buildImage(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        _pickImage(context);
-      },
-      child: CircleAvatar(
-        backgroundImage: _image != null ? FileImage(File(_image!.path)) : null,
-        backgroundColor: Palette.secondaryColor,
-        radius: 50,
-        child: _image == null
-            ? const Icon(
-                Icons.add_a_photo,
-                size: 30,
-                color: Palette.primaryColor,
-              )
-            : null,
-      ),
-    );
-  }
-
   Widget _buildSignUpButton(BuildContext context) {
     return BlocConsumer<SignUpBloc, SignUpState>(
       listener: (context, state) {
         if (state.status == SignUpStatus.success) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const SignInPage(),
-            ),
-          );
+          Navigator.pushNamed(context, Routes.signIn);
         } else if (state.status == SignUpStatus.failure) {
-          CustomSnackBar(context, 'Failed to signup');
+          CustomSnackBar(context, state.errorMessage);
         }
       },
       builder: (context, state) {
         if (state.status == SignUpStatus.loading) {
           return const CircularProgressIndicator(
-            color: Palette.secondaryColor,
+            color: AppColors.secondaryColor,
           );
         }
         return SizedBox(
@@ -183,18 +167,11 @@ class _SignUpState extends State<SignUpPage> {
             buttonTitle: "Sign Up",
             buttonFunction: () {
               if (_formKey.currentState?.validate() != false) {
-                BlocProvider.of<SignUpBloc>(context).add(
-                  SignUpSubmitted(
-                    _name.text,
-                    _email.text,
-                    _password.text,
-                    _image!,
-                  ),
-                );
+                context.read<SignUpBloc>().add(SignUpSubmitted());
               }
             },
-            textColor: Palette.primaryColor,
-            backgroundColor: Palette.secondaryColor,
+            textColor: AppColors.primaryColor,
+            backgroundColor: AppColors.secondaryColor,
           ),
         );
       },

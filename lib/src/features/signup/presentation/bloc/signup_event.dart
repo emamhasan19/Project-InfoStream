@@ -1,24 +1,31 @@
-import 'package:equatable/equatable.dart';
-import 'package:image_picker/image_picker.dart';
+part of 'signup_bloc.dart';
 
-class SignUpEvent extends Equatable {
-  @override
-  // TODO: implement props
-  List<Object?> get props => [];
+class SignUpEvent {
+  const SignUpEvent();
 }
 
-class SignUpSubmitted extends SignUpEvent {
+class ImageChangeEvent extends SignUpEvent {
+  const ImageChangeEvent({required this.image});
+
+  final String image;
+}
+
+class NameChangeEvent extends SignUpEvent {
+  const NameChangeEvent({required this.name});
+
   final String name;
-  final String email;
-  final String password;
-  final XFile image;
-
-  SignUpSubmitted(
-    this.name,
-    this.email,
-    this.password,
-    this.image,
-  );
-  @override
-  List<Object?> get props => [name, email, password, image];
 }
+
+class EmailChangeEvent extends SignUpEvent {
+  const EmailChangeEvent({required this.email});
+
+  final String email;
+}
+
+class PasswordChangeEvent extends SignUpEvent {
+  const PasswordChangeEvent({required this.password});
+
+  final String password;
+}
+
+class SignUpSubmitted extends SignUpEvent {}
