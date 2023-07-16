@@ -16,7 +16,6 @@ InfoStream is a newsfeed app inspired by Facebook, designed to connect people an
 - Displaying profile details in profile page
 - Displaying user details on a navigation drawer in home page
 - Displaying posts on home page with like, comment and share buttons
-- Retweeting/ Resharing tweets (Realtime)
 - Logging out
 
 ## Screenshots
